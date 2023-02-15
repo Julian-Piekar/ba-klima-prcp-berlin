@@ -1,37 +1,74 @@
-# load libraries
-library(terra) # newer than raster
-library(RColorBrewer) # map colour ramp
+################################################################################
+# This script reads and subset CER v1 Data at a specific point
+# along third dimension (e.g. to compare values in CER with station values)
+# Task:
+# I have station data that I want to compare with CER v1 data
+# Therefore, I need to extract CER-data that is closest to my station
+
 require(ncdf4)
+require(dplyr)
 
-#source('C:/UNI/BA/BA Klima/R Studio/CER_functions.R')
+fpath <- "./cer-daten/CER_d02km_h_2d_prcp_2004.nc"
+ncin  <-  nc_open(filename = fpath)
 
-
-# Open NetCDF file and print summary
-nc1 <- nc_open("./cer-daten/c400_04o.nc")
-
-print(nc1)
+#coor Buch
+station_lat <- 52.3807
+station_lon <- 13.5306
 
 # Extract year as character string
-year <- substr(nc1$dim$time$units, 13, 16)
+year <- substr(ncin$dim$time$units, 13, 16)
 
-# Read longitude/latitude of grid points
-lon <- ncvar_get(nc1, varid="lon")
-lat <- ncvar_get(nc1, varid="lat")
+# get variable prcp as it says in print-output
+CER_prcp  <-  ncvar_get(ncin, "prcp")
 
-# Read data
-pr1 <- ncvar_get(nc1, varid="prcp")
+# Now, we have the whole data-set as a "large array"
 
-# Close CER file
-nc_close(nc1)
+CER_lon <- ncvar_get(ncin,"lon")[,1] # as in x = lon direction because is stored in 2D
+CER_lat <- ncvar_get(ncin,"lat")[1,] # as in y = lat direction because is stored in 2D
 
-pr.m1 <- vector() # empty vector for hourly prcp
+# Task: Get the closest latitude and longitude value from CER compared to station
+# latitude and longitude value
+# get the index (something between 1 and 140) where the difference between 
+# lat/lon dwd and lat/lon CER is minimal
 
-for (i in 1:8760) pr.m1[i] <- max(pr1[i], na.rm=TRUE)
-options(max.print=8760)
-print("")
-print("Hourly")
-print("---------------------------")
-print(round(pr.m1, digits=1)) # output to console (digits = 1 bedeutet dass die Werte auf eine Stelle nach dem Komma gerundet werden)
+# for longitude
+CER_lon_index <- which(abs(CER_lon - station_lon) == min(abs(CER_lon - station_lon)))
+# check
+CER_lon_index
+CER_lon[CER_lon_index][1] # take first, just in case there are two or more values equally close
 
-plot(1:8760, pr.m1, main="Hourly pr (CER 2 km domain)",
-     xlab=paste0("Hours ", year), ylab="PRCP mm h-1")
+# for latitude
+CER_lat_index <- which(abs(CER_lat - station_lat) == min(abs(CER_lat - station_lat)))
+#check
+CER_lat_index
+CER_lat[CER_lat_index][1] # take first, just in case there are two or more values equally close
+
+# time dimension has to be derived from ncdf attributes "time" and "units" (print(ncin))
+# get time from attribute
+CER_time_start <- unlist(strsplit(ncatt_get(ncin, "time", "units")$value, "since "))[2]
+
+# compute sequence of hourly times stamps
+CER_time <- seq(from = as.POSIXct(CER_time_start), length.out = dim(CER_prcp)[3], by = "hours")
+
+# now we get z (values of prcp along third dimension) 
+plot(CER_time,CER_prcp[CER_lon_index,CER_lat_index,], main="Hourly prcp (CER 2 km domain)",
+                          xlab="Hours BER 2004", ylab="Prcp mm h-1")
+
+# create matrix  of lon, lat, time 
+lonlattime <- as.matrix(expand.grid(CER_lon_index,CER_lat_index,CER_time))
+
+prcp_slice <- CER_prcp[84,68,]
+
+# create data frame 
+prcp_dat <- data.frame(cbind(lonlattime, prcp_slice))
+
+# give right column names
+colnames(prcp_dat) <- c("Lon","Lat","Date","PRCP")
+head(prcp_dat)
+
+# column PRCP in num to round 
+prcp_dat$PRCP <- as.numeric(as.character(prcp_dat$PRCP))
+prcp_dat <- prcp_dat %>% mutate_if(is.numeric, round, digits = 1) 
+
+# always close the pointer to the open ncdf-file to avoid problems
+nc_close(ncin)
