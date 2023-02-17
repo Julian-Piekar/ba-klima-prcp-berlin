@@ -14,7 +14,10 @@ rechner8 <- rech_fun("./cer-daten/df8.csv")
 
 Tabelle = bind_rows(rechner1,rechner2,rechner3,rechner4,rechner5,rechner6,rechner7,rechner8)
 row.names(Tabelle) = c("Alexanderplatz", "Buch", "Dahlem", "Kaniswall", "Marzahn", "BER", "Tegel", "Tempelhof")
-
+Tabelle <- Tabelle %>% mutate_if(is.numeric, round, digits = 2)
 write.csv(Tabelle, "Tabelle.csv", row.names = T, quote = F)
 
-Tabelle = read.csv("Tabelle.csv")
+Tabelle = read.csv("Tabelle_fin.csv")
+colnames(Tabelle) = c("Station", "BIAS", "FAR", "POFD", "POD", "HSS","MAE", "RMSE")
+
+write.csv(Tabelle, "Tabelle_fin.csv", row.names = F, quote = F)
