@@ -67,5 +67,20 @@ list1 <- Reduce(function(x,y) merge(x,y, all=T), list1)
 list1 <- list1[1417:92735,]
 rownames(list1) <- NULL
 
-# "listx.csv" ändern damit neue liste erstellt wird 
+# "cer_x_full.csv" ändern damit neue liste erstellt wird 
 write.csv(list1, "./cer-daten/cer_1_full.csv", row.names = F, quote = F)
+             
+                
+# Merge to data.frame cer + dwd
+                
+# ruft vollen CER daten an Stations lon/lat auf
+cer_1_full <- read.csv("./cer-daten/cer_1_full.csv" ,header=TRUE, 
+                  na.strings="NA", dec=".", stringsAsFactors = T, sep = ",")
+
+# ruft vollen DWD daten auf
+alex_1_full <- read.csv("./dwd-daten/alex_1_full.csv", header=TRUE, 
+                        na.strings="NA", dec=".", stringsAsFactors = T, sep = ",")
+
+# erstellt data.frame cer + dwd
+df1 <- data.frame(cer= cer_1_full, dwd = alex_1_full)
+write.csv(df1, "./cer-daten/df1.csv", row.names = F, quote = F)
