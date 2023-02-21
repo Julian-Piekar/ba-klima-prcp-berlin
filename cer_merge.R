@@ -78,9 +78,9 @@ cer_1_full <- read.csv("./cer-daten/cer_1_full.csv" ,header=TRUE,
                   na.strings="NA", dec=".", stringsAsFactors = T, sep = ",")
 
 # ruft vollen DWD daten auf
-alex_1_full <- read.csv("./dwd-daten/alex_1_full.csv", header=TRUE, 
+dwd_1_full <- read.csv("./dwd-daten/dwd_1_full.csv", header=TRUE, 
                         na.strings="NA", dec=".", stringsAsFactors = T, sep = ",")
 
 # erstellt data.frame cer + dwd
-df1 <- data.frame(cer= cer_1_full, dwd = alex_1_full)
+df1 <- data.frame(cer= cer_1_full, dwd = dwd_1_full)
 write.csv(df1, "./cer-daten/df1.csv", row.names = F, quote = F)
