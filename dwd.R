@@ -12,7 +12,6 @@ minhour <- seq(as.POSIXct("2004-06-01 00:00:00"), as.POSIXct("2019-06-01 00:00:0
 minhour <- data.frame( MESS_DATUM = minhour)
 
 buch <- merge(minhour, buch, by ="MESS_DATUM", all.x = T)
-buch[is.na(buch)] <- 0
-buch[buch == -999] <- 0
+buch[buch == -999] <- NA
 
-write.csv(buch, "./dwd-daten/buch_2_full.csv", row.names = F, quote = F)
+write.csv(buch, "./dwd-daten/dwd_2_full.csv", row.names = F, quote = F)
