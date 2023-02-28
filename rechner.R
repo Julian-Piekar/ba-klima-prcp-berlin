@@ -1,7 +1,5 @@
 # Erstellt Tabelle mit allen Kenngrößen für alle Stationen
-
 source("rech_fun.R")
-require(dplyr)
 
 rechner1 <- rech_fun("./cer-daten/df1.csv")
 rechner2 <- rech_fun("./cer-daten/df2.csv")
