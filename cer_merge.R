@@ -20,43 +20,6 @@ source("cer_fun.R")
 
 # func liesst in Jahr.nc prcp an lon/lat aus und erstellt data.frame, lon/lat anpassen 
 cer_1_1 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2001.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_2 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2002.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_3 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2003.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_4 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2004.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_5 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2005.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_6 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2006.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_7 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2007.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_8 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2008.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_9 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2009.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_10 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2010.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_11 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2011.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_12 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2012.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_13 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2013.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_14 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2014.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_15 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2015.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_16 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2016.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_17 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2017.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_18 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2018.nc", "prcp", 13.4057, 52.5198)
-mem_used()
-cer_1_19 <- cer_fun("./cer-daten/CER_d02km_h_2d_prcp_2019.nc", "prcp", 13.4057, 52.5198)
-mem_used()
 
 # erstellt liste mit allen data.frames
 list1 <- list(cer_1_1,cer_1_2,cer_1_3,cer_1_4,cer_1_5,cer_1_6,cer_1_7,cer_1_8,cer_1_9,cer_1_10,
@@ -68,14 +31,9 @@ list1 <- list1[1417:92735,]
 rownames(list1) <- NULL
 
 # "cer_x_full.csv" ändern damit neue liste erstellt wird 
-write.csv(list1, "./cer-daten/cer_1_full.csv", row.names = F, quote = F)
-             
+write.csv(list1, "./cer-daten/cer_1_full.csv", row.names = F, quote = F)        
                 
 # Merge to data.frame cer + dwd
-                
-# ruft vollen CER daten an Stations lon/lat auf
-cer_1_full <- read.csv("./cer-daten/cer_1_full.csv" ,header=TRUE, 
-                  na.strings="NA", dec=".", stringsAsFactors = T, sep = ",")
 
 # ruft vollen DWD daten auf
 dwd_1_full <- read.csv("./dwd-daten/dwd_1_full.csv", header=TRUE, 
@@ -83,4 +41,3 @@ dwd_1_full <- read.csv("./dwd-daten/dwd_1_full.csv", header=TRUE,
 
 # erstellt data.frame cer + dwd
 df1 <- data.frame(cer= cer_1_full, dwd = dwd_1_full)
-write.csv(df1, "./cer-daten/df1.csv", row.names = F, quote = F)
