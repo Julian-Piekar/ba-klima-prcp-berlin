@@ -1,58 +1,23 @@
 source("daily_fun.R")
 source("mean_fun.R")
-library(plyr)
 library(data.table)
-require(dplyr)
 
 # neuer data.frame mit täglichen summen für analyse
 dailyAL <- daily_fun("./cer-daten2km/df1.csv")
-dailyBU <- daily_fun("./cer-daten2km/df2.csv")
-dailyDA <- daily_fun("./cer-daten2km/df3.csv")
-dailyKA <- daily_fun("./cer-daten2km/df4.csv")
-dailyMA <- daily_fun("./cer-daten2km/df5.csv")
-dailyBE <- daily_fun("./cer-daten2km/df6.csv")
-dailyTE <- daily_fun("./cer-daten2km/df7.csv")
-dailyTH <- daily_fun("./cer-daten2km/df8.csv")
 
 monthAL <- month_fun(dailyAL)
-monthBU <- month_fun(dailyBU)
-monthDA <- month_fun(dailyDA)
-monthKA <- month_fun(dailyKA)
-monthMA <- month_fun(dailyMA)
-monthBE <- month_fun(dailyBE)
-monthTE <- month_fun(dailyTE)
-monthTH <- month_fun(dailyTH)
 
 #mean
 mdurch1 = mean_fun(monthTH)
 
 row.names(mdurch1) = c("Jan", "Feb", "Mär", "Apr", "Mai", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dez")
 colnames(Durchschnitt1) = c("Monat", "cer.PRCP", "dwd.R1")
-write.csv(mdurch1, "Durchschnitt_Monat.csv", row.names = T, quote = F)
 
 # sum
 yearAL <- year_fun(dailyAL)
-yearBU <- year_fun(dailyBU)
-yearDA <- year_fun(dailyDA)
-yearKA <- year_fun(dailyKA)
-yearMA <- year_fun(dailyMA)
-yearBE <- year_fun(dailyBE)
-yearTE <- year_fun(dailyTE)
-yearTH <- year_fun(dailyTH)
 
 # mean
 mean1 = colMeans(yearAL[, c(2,3)], na.rm = T)
-mean2 = colMeans(yearBU[, c(2,3)], na.rm = T)
-mean3 = colMeans(yearDA[, c(2,3)], na.rm = T)
-mean4 = colMeans(yearKA[, c(2,3)], na.rm = T)
-mean5 = colMeans(yearMA[, c(2,3)], na.rm = T)
-mean6 = colMeans(yearBE[, c(2,3)], na.rm = T)
-mean7 = colMeans(yearTE[, c(2,3)], na.rm = T)
-mean8 = colMeans(yearTH[, c(2,3)], na.rm = T)
 
-TabelleMEAN = bind_rows(mean1,mean2,mean3,mean4,mean5,mean6,mean7,mean8)
-row.names(TabelleMEAN) = c("Alexanderplatz", "Buch", "Dahlem", "Kaniswall", "Marzahn", "BER", "Tegel", "Tempelhof")
-colnames(TabelleMEAN) = c("Station", "mean_cer", "mean_dwd")
-TabelleMEAN <- TabelleMEAN %>% mutate_if(is.numeric, round, digits = 2)
-write.csv(TabelleMEAN, "Tabellemean10.csv", row.names = T, quote = F)
+
 
